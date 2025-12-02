@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Reward {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  value       Int      // Value/Worth
+  count       Int      // Remaining stock
+  probability Float    // Chance to win (0-100 or weight)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  winLogs     WinLog[]
+}
+
+model WinLog {
+  id        String   @id @default(uuid())
+  rewardId  String
+  reward    Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  wonAt     DateTime @default(now())
+}
+
+
