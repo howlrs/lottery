@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { name, description, value, count } = body;
+        const { name, description, value, count, isLose } = body;
 
         if (!name || value === undefined || count === undefined) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
                 description,
                 value: Number(value),
                 count: Number(count),
+                isLose: Boolean(isLose),
                 probability: 0, // Initial value, will be updated
             },
         });

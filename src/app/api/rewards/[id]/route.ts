@@ -11,7 +11,7 @@ export async function PUT(
     try {
         const { id } = await params;
         const body = await request.json();
-        const { name, description, value, count } = body;
+        const { name, description, value, count, isLose } = body;
 
         const reward = await prisma.reward.update({
             where: { id },
@@ -20,6 +20,7 @@ export async function PUT(
                 description,
                 value: value !== undefined ? Number(value) : undefined,
                 count: count !== undefined ? Number(count) : undefined,
+                isLose: isLose !== undefined ? Boolean(isLose) : undefined,
                 // Probability is updated via recalculation
             },
         });

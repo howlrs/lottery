@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Trash2, Edit, Plus, Save, X } from 'lucide-react';
+import { useLanguage } from '../../i18n/LanguageContext';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
 
 interface Reward {
     id: string;
@@ -10,9 +12,11 @@ interface Reward {
     value: number;
     count: number;
     probability: number;
+    isLose: boolean;
 }
 
 export default function AdminPage() {
+    const { t } = useLanguage();
     const [rewards, setRewards] = useState<Reward[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingReward, setEditingReward] = useState<Partial<Reward> | null>(null);
@@ -26,7 +30,7 @@ export default function AdminPage() {
         try {
             const res = await fetch('/api/rewards');
             if (!res.ok) {
-                throw new Error('Failed to fetch rewards');
+                throw new Error(t.admin.fetchError);
             }
             const data = await res.json();
             if (Array.isArray(data)) {
@@ -44,7 +48,7 @@ export default function AdminPage() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this reward?')) return;
+        if (!confirm(t.admin.deleteConfirm)) return;
         try {
             await fetch(`/api/rewards/${id}`, { method: 'DELETE' });
             fetchRewards();
@@ -66,14 +70,14 @@ export default function AdminPage() {
                 body: JSON.stringify(editingReward),
             });
 
-            if (!res.ok) throw new Error('Failed to save');
+            if (!res.ok) throw new Error(t.admin.saveError);
 
             setEditingReward(null);
             setIsCreating(false);
             fetchRewards();
         } catch (error) {
             console.error('Failed to save reward', error);
-            alert('Failed to save reward');
+            alert(t.admin.saveError);
         }
     };
 
@@ -88,6 +92,7 @@ export default function AdminPage() {
             description: '',
             value: 0,
             count: 0,
+            isLose: false,
         });
         setIsCreating(true);
     };
@@ -96,27 +101,31 @@ export default function AdminPage() {
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-800">Reward Management</h1>
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-2xl font-bold text-gray-800">{t.admin.title}</h1>
+                        <LanguageSwitcher />
+                    </div>
                     <button
                         onClick={startCreate}
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition"
                     >
-                        <Plus size={20} /> Add Reward
+                        <Plus size={20} /> {t.admin.addReward}
                     </button>
                 </div>
 
                 {loading ? (
-                    <div className="text-center py-8">Loading...</div>
+                    <div className="text-center py-8">{t.admin.loading}</div>
                 ) : (
                     <div className="bg-white rounded-lg shadow overflow-hidden">
                         <table className="w-full">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prob (%)</th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.admin.name}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.admin.value}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.admin.stock}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.admin.prob}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.admin.isLose}</th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t.admin.actions}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
@@ -126,6 +135,7 @@ export default function AdminPage() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reward.value}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reward.count}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reward.probability}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reward.isLose ? 'Yes' : 'No'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <button
                                                 onClick={() => startEdit(reward)}
@@ -151,7 +161,7 @@ export default function AdminPage() {
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
                         <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold">{isCreating ? 'New Reward' : 'Edit Reward'}</h2>
+                                <h2 className="text-xl font-bold">{isCreating ? t.admin.newReward : t.admin.editReward}</h2>
                                 <button onClick={() => setEditingReward(null)} className="text-gray-500 hover:text-gray-700">
                                     <X size={24} />
                                 </button>
@@ -159,7 +169,7 @@ export default function AdminPage() {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Name</label>
+                                    <label className="block text-sm font-medium text-gray-700">{t.admin.name}</label>
                                     <input
                                         type="text"
                                         value={editingReward.name || ''}
@@ -168,7 +178,7 @@ export default function AdminPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                                    <label className="block text-sm font-medium text-gray-700">{t.admin.description}</label>
                                     <input
                                         type="text"
                                         value={editingReward.description || ''}
@@ -178,7 +188,7 @@ export default function AdminPage() {
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">Value</label>
+                                        <label className="block text-sm font-medium text-gray-700">{t.admin.value}</label>
                                         <input
                                             type="number"
                                             value={editingReward.value || 0}
@@ -187,7 +197,7 @@ export default function AdminPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">Stock</label>
+                                        <label className="block text-sm font-medium text-gray-700">{t.admin.stock}</label>
                                         <input
                                             type="number"
                                             value={editingReward.count || 0}
@@ -196,6 +206,17 @@ export default function AdminPage() {
                                         />
                                     </div>
                                 </div>
+                                <div>
+                                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                        <input
+                                            type="checkbox"
+                                            checked={editingReward.isLose || false}
+                                            onChange={(e) => setEditingReward({ ...editingReward, isLose: e.target.checked })}
+                                            className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        />
+                                        {t.admin.isLose}
+                                    </label>
+                                </div>
                             </div>
 
                             <div className="mt-6 flex justify-end gap-3">
@@ -203,13 +224,13 @@ export default function AdminPage() {
                                     onClick={() => setEditingReward(null)}
                                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                                 >
-                                    Cancel
+                                    {t.admin.cancel}
                                 </button>
                                 <button
                                     onClick={handleSave}
                                     className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 flex items-center gap-2"
                                 >
-                                    <Save size={16} /> Save
+                                    <Save size={16} /> {t.admin.save}
                                 </button>
                             </div>
                         </div>

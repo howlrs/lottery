@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { useLanguage } from '../i18n/LanguageContext';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 interface Reward {
     id: string;
@@ -10,9 +12,11 @@ interface Reward {
     value: number;
     count: number;
     probability: number;
+    isLose: boolean;
 }
 
 export default function LotteryPage() {
+    const { t } = useLanguage();
     const [rewards, setRewards] = useState<Reward[]>([]);
     const [isWaiting, setIsWaiting] = useState(false);
     const [spinning, setSpinning] = useState(false);
@@ -45,22 +49,16 @@ export default function LotteryPage() {
     const startSpin = () => {
         if (spinning || isWaiting || rewards.length === 0) return;
 
-        setIsWaiting(true);
         setResult(null);
+        setSpinning(true);
+        setIsStopping(false);
+        speedRef.current = 20; // Initial speed (degrees per frame)
 
-        // Wait for 2 seconds before starting rotation
-        setTimeout(() => {
-            setIsWaiting(false);
-            setSpinning(true);
-            setIsStopping(false);
-            speedRef.current = 20; // Initial speed (degrees per frame)
-
-            const animate = () => {
-                setRotation(prev => (prev + speedRef.current) % 360);
-                animationRef.current = requestAnimationFrame(animate);
-            };
+        const animate = () => {
+            setRotation(prev => (prev + speedRef.current) % 360);
             animationRef.current = requestAnimationFrame(animate);
-        }, 2000);
+        };
+        animationRef.current = requestAnimationFrame(animate);
     };
 
     const stopSpin = () => {
@@ -149,20 +147,22 @@ export default function LotteryPage() {
 
             if (res.ok) {
                 setResult(reward);
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
+                if (!reward.isLose) {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
                 // Refresh rewards to update stock
                 fetchRewards();
             } else {
                 const err = await res.json();
-                alert('Error claiming reward: ' + err.error);
+                alert(t.lottery.errorClaiming + ': ' + err.error);
             }
         } catch (error) {
             console.error('Failed to claim', error);
-            alert('Failed to claim reward');
+            alert(t.lottery.failedToClaim);
         }
     };
 
@@ -250,8 +250,11 @@ export default function LotteryPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
-            <h1 className="text-4xl font-bold text-white mb-8">Lottery Challenge</h1>
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 relative">
+            <div className="absolute top-4 right-4 z-50">
+                <LanguageSwitcher />
+            </div>
+            <h1 className="text-4xl font-bold text-white mb-8">{t.lottery.title}</h1>
 
             <div className="relative w-80 h-80 sm:w-96 sm:h-96 mb-12">
                 {/* Pointer */}
@@ -263,13 +266,13 @@ export default function LotteryPage() {
                     style={{ transform: `rotate(${rotation}deg)` }}
                 >
                     {loading ? (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">Loading...</div>
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">{t.lottery.loading}</div>
                     ) : rewards.length > 0 ? (
                         <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
                             {getSegments()}
                         </svg>
                     ) : (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">No Rewards</div>
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">{t.lottery.noRewards}</div>
                     )}
                 </div>
             </div>
@@ -284,19 +287,25 @@ export default function LotteryPage() {
                         : 'bg-gradient-to-r from-pink-500 to-yellow-500 text-white hover:from-pink-600 hover:to-yellow-600'
                     }`}
             >
-                {isWaiting ? 'Spinning...' : isStopping ? 'Stopping...' : spinning ? 'STOP!' : 'SPIN!'}
+                {isWaiting ? t.lottery.spinning : isStopping ? t.lottery.stopping : spinning ? t.lottery.stop : t.lottery.spin}
             </button>
 
             {result && (
-                <div className="mt-8 p-6 bg-white rounded-xl shadow-2xl text-center animate-bounce">
-                    <h2 className="text-2xl font-bold text-gray-800">Congratulations!</h2>
-                    <p className="text-xl text-purple-600 mt-2">You won: {result.name}</p>
-                    <p className="text-gray-500 mt-1">{result.description}</p>
+                <div className={`mt-8 p-6 bg-white rounded-xl shadow-2xl text-center ${result.isLose ? '' : 'animate-bounce'}`}>
+                    <h2 className="text-2xl font-bold text-gray-800">
+                        {result.isLose ? t.lottery.youLost : t.lottery.congratulations}
+                    </h2>
+                    <p className={`text-xl mt-2 ${result.isLose ? 'text-gray-600' : 'text-purple-600'}`}>
+                        {result.isLose ? result.name : `${t.lottery.youWon} ${result.name}`}
+                    </p>
+                    <p className="text-gray-500 mt-1">
+                        {result.description || (result.isLose ? t.lottery.tryAgain : '')}
+                    </p>
                 </div>
             )}
 
             <div className="mt-12 text-gray-400 text-sm">
-                <a href="/admin" className="hover:text-white underline">Admin Panel</a>
+                <a href="/admin" className="hover:text-white underline">{t.lottery.adminPanel}</a>
             </div>
         </div>
     );
