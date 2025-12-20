@@ -1,5 +1,7 @@
 # 抽選システム (Lottery System)
 
+<video src="docs/demo.webm" controls autoplay muted loop width="100%"></video>
+
 このプロジェクトは、Next.js (App Router) をベースにした、Web上で動作する多言語対応の抽選システムです。管理者がイベントや景品を管理し、ユーザーがルーレット形式で抽選に参加することができます。
 
 ## 主な機能
