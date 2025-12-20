@@ -15,15 +15,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const [language, setLanguage] = useState<Language>('en');
 
     useEffect(() => {
-        // Try to get language from localStorage or browser preference
         const savedLang = localStorage.getItem('language') as Language;
         if (savedLang && (savedLang === 'en' || savedLang === 'ja')) {
             setLanguage(savedLang);
-        } else {
-            const browserLang = navigator.language.startsWith('ja') ? 'ja' : 'en';
-            setLanguage(browserLang);
+        } else if (typeof navigator !== 'undefined' && navigator.language.startsWith('ja')) {
+            setLanguage('ja');
         }
     }, []);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            document.documentElement.lang = language;
+        }
+    }, [language]);
 
     const handleSetLanguage = (lang: Language) => {
         setLanguage(lang);
