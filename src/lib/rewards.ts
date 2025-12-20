@@ -1,13 +1,18 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
-export async function recalculateProbabilities(prisma: PrismaClient | any) {
-    // Fetch all rewards
-    const rewards = await prisma.reward.findMany();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function recalculateProbabilities(tx: any, event_id?: string) {
+    if (!event_id) return; // Must scope by event
+
+    // Fetch all rewards for this event
+    const rewards = await tx.reward.findMany({
+        where: { event_id }
+    });
 
     if (rewards.length === 0) return;
 
     // Calculate total count
-    const totalCount = rewards.reduce((sum: number, reward: any) => sum + reward.count, 0);
+    const totalCount = rewards.reduce((sum: number, reward: { count: number }) => sum + reward.count, 0);
 
     // Update each reward
     for (const reward of rewards) {
@@ -19,7 +24,7 @@ export async function recalculateProbabilities(prisma: PrismaClient | any) {
         // Round to 2 decimal places for cleaner display
         probability = Math.round(probability * 100) / 100;
 
-        await prisma.reward.update({
+        await tx.reward.update({
             where: { id: reward.id },
             data: { probability },
         });

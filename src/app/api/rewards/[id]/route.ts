@@ -11,7 +11,7 @@ export async function PUT(
     try {
         const { id } = await params;
         const body = await request.json();
-        const { name, description, value, count, isLose } = body;
+        const { name, description, value, count, is_lose } = body;
 
         const reward = await prisma.reward.update({
             where: { id },
@@ -20,12 +20,12 @@ export async function PUT(
                 description,
                 value: value !== undefined ? Number(value) : undefined,
                 count: count !== undefined ? Number(count) : undefined,
-                isLose: isLose !== undefined ? Boolean(isLose) : undefined,
+                is_lose: is_lose !== undefined ? Boolean(is_lose) : undefined,
                 // Probability is updated via recalculation
             },
         });
 
-        await recalculateProbabilities(prisma);
+        await recalculateProbabilities(prisma, reward.event_id);
 
         // Fetch updated reward
         const updatedReward = await prisma.reward.findUnique({
@@ -45,11 +45,11 @@ export async function DELETE(
 ) {
     try {
         const { id } = await params;
-        await prisma.reward.delete({
+        const reward = await prisma.reward.delete({
             where: { id },
         });
 
-        await recalculateProbabilities(prisma);
+        await recalculateProbabilities(prisma, reward.event_id);
 
         return NextResponse.json({ success: true });
     } catch (error) {

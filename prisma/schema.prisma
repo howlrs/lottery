@@ -10,24 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String?
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  rewards     Reward[]
+}
+
 model Reward {
   id          String   @id @default(uuid())
+  event_id    String
+  event       Event    @relation(fields: [event_id], references: [id], onDelete: Cascade)
   name        String
   description String?
   value       Int      // Value/Worth
   count       Int      // Remaining stock
   probability Float    // Chance to win (0-100 or weight)
-  isLose      Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  winLogs     WinLog[]
+  is_lose     Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  win_logs    WinLog[]
 }
 
 model WinLog {
-  id        String   @id @default(uuid())
-  rewardId  String
-  reward    Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
-  wonAt     DateTime @default(now())
+  id          String   @id @default(uuid())
+  reward_id   String
+  reward      Reward   @relation(fields: [reward_id], references: [id], onDelete: Cascade)
+  token       String   @default(uuid())
+  is_redeemed Boolean  @default(false)
+  redeemed_at DateTime?
+  won_at      DateTime @default(now())
 }
 
 
