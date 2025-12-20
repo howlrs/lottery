@@ -9,21 +9,17 @@ test.describe('Lottery Flow', () => {
         await expect(page.locator('h1')).toContainText(/Events|イベント一覧/);
 
         // 2. Click on "Manage" for the first event (assuming one exists from seeding)
-        // If none exists, we might need to create one, but for now let's assume 'welcome' slug exists
-        await page.goto('/admin/events/default'); // This depends on what's in the DB. 
-        // Let's go through the UI to be safer.
         await page.goto('/admin');
+        await expect(page.locator('h1')).toContainText(/Events|イベント一覧/);
 
-        // Create event if needed or just use existing. 
-        // For E2E, it's better to be deterministic.
-        // Let's go to the public page first.
+        // 3. Go to public page and find event
         await page.goto('/');
         const eventLink = page.locator('a[href^="/events/"]').first();
         await expect(eventLink).toBeVisible();
         const eventSlug = await eventLink.getAttribute('href');
 
-        // 3. User: Participation
-        console.log('Clicking on event:', await eventLink.getAttribute('href'));
+        // 4. User: Participation
+        console.log('Clicking on event:', eventSlug);
         await eventLink.click();
 
         await expect(page.locator('h1')).toBeVisible();
@@ -34,6 +30,12 @@ test.describe('Lottery Flow', () => {
         await expect(spinButton).toBeEnabled();
         await spinButton.click();
         console.log('Wheel spinning...');
+
+        // Wait a bit then stop
+        await page.waitForTimeout(2000);
+        const stopButton = page.locator('button', { hasText: /STOP|ストップ/i });
+        await stopButton.click();
+        console.log('Stopping...');
 
         // Wait for wheel to stop and results to appear
         const resultHeader = page.locator('h2', { hasText: /Congratulations|おめでとう|Too bad|残念/ });
