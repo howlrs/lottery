@@ -5,16 +5,16 @@ import { Prisma } from '@prisma/client';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { rewardId } = body;
+        const { reward_id } = body;
 
-        if (!rewardId) {
-            return NextResponse.json({ error: 'Missing rewardId' }, { status: 400 });
+        if (!reward_id) {
+            return NextResponse.json({ error: 'Missing reward_id' }, { status: 400 });
         }
 
         // Use a transaction to ensure stock is checked and decremented atomically
         const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
             const reward = await tx.reward.findUnique({
-                where: { id: rewardId },
+                where: { id: reward_id },
             });
 
             if (!reward) {
@@ -26,22 +26,26 @@ export async function POST(request: Request) {
             }
 
             const updatedReward = await tx.reward.update({
-                where: { id: rewardId },
+                where: { id: reward_id },
                 data: { count: { decrement: 1 } },
             });
 
+            if ((reward as any).is_lose) {
+                return { reward: updatedReward, win_log: null };
+            }
+
             const winLog = await tx.winLog.create({
                 data: {
-                    rewardId,
-                },
+                    reward_id: reward_id,
+                } as any,
             });
 
-            return { reward: updatedReward, winLog };
+            return { reward: updatedReward, win_log: winLog };
         });
 
         return NextResponse.json(result);
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Failed to claim reward:', error);
-        return NextResponse.json({ error: error.message || 'Failed to claim reward' }, { status: 500 });
+        return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to claim reward' }, { status: 500 });
     }
 }
