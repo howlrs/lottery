@@ -1,0 +1,10 @@
+services:
+  tester:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - DATABASE_URL=file:./test.db
+      - BASE_URL=http://localhost:3000
+    command: >
+      sh -c "npx prisma generate && npx prisma db push && npx prisma db seed && npm run build && (npm run start &) && npx wait-on http://localhost:3000 && curl -v http://localhost:3000 && npm run test && npm run test:e2e"
