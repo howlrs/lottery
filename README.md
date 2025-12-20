@@ -29,6 +29,28 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Testing
+
+### Local Testing
+
+Run unit and integration tests (Jest):
+```bash
+npm test
+```
+
+Run E2E tests (Playwright):
+```bash
+# Needs the app running in another terminal
+npm run test:e2e
+```
+
+### Dockerized Testing (Recommended)
+
+Run all tests (Jest & Playwright) in a clean container environment:
+```bash
+docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
+```
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
