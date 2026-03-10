@@ -1,0 +1,19 @@
+# Caddy reverse proxy configuration
+# Place this at /etc/caddy/Caddyfile on the GCE instance
+#
+# Replace SUBDOMAIN.DOMAIN.COM with your actual subdomain
+# Add more blocks for additional services
+
+# Lottery service
+SUBDOMAIN.DOMAIN.COM {
+    reverse_proxy localhost:3001
+}
+
+# Example: Add more services
+# app2.DOMAIN.COM {
+#     reverse_proxy localhost:3002
+# }
+#
+# app3.DOMAIN.COM {
+#     reverse_proxy localhost:3003
+# }

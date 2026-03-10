@@ -4,12 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
-      - DATABASE_URL=file:./prod.db
+      - DATABASE_URL=file:/app/data/prod.db
       - ADMIN_SECRET=${ADMIN_SECRET:-}
     volumes:
-      - lottery-data:/app/prisma
+      - lottery-data:/app/data
     restart: unless-stopped
 
 volumes:
