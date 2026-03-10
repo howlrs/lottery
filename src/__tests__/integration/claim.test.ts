@@ -27,7 +27,7 @@ describe('/api/claim API Endpoint', () => {
 
     it('should correctly process a winning reward claim', async () => {
         const mockReward = {
-            id: 'reward-1',
+            id: '550e8400-e29b-41d4-a716-446655440000',
             count: 10,
             is_lose: false,
             name: 'Prizes'
@@ -50,7 +50,7 @@ describe('/api/claim API Endpoint', () => {
 
         const req = new Request('http://localhost/api/claim', {
             method: 'POST',
-            body: JSON.stringify({ reward_id: 'reward-1' }),
+            body: JSON.stringify({ reward_id: '550e8400-e29b-41d4-a716-446655440000' }),
         });
 
         const response = await POST(req);
@@ -63,7 +63,7 @@ describe('/api/claim API Endpoint', () => {
 
     it('should return null win_log and skip creation for lose rewards', async () => {
         const mockReward = {
-            id: 'reward-2',
+            id: '660e8400-e29b-41d4-a716-446655440000',
             count: 100,
             is_lose: true,
             name: 'Lose'
@@ -90,7 +90,7 @@ describe('/api/claim API Endpoint', () => {
 
         const req = new Request('http://localhost/api/claim', {
             method: 'POST',
-            body: JSON.stringify({ reward_id: 'reward-2' }),
+            body: JSON.stringify({ reward_id: '660e8400-e29b-41d4-a716-446655440000' }),
         });
 
         const response = await POST(req);

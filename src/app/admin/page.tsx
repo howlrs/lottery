@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
+import { showToast } from '@/components/Toast';
 import { useLanguage } from '@/i18n/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
@@ -54,11 +55,11 @@ export default function AdminDashboard() {
                 setIsCreating(false);
                 fetchEvents();
             } else {
-                alert('Failed to create event');
+                showToast(t.admin.saveError, 'error');
             }
         } catch (error) {
             console.error(error);
-            alert('Failed to create event');
+            showToast(t.admin.saveError, 'error');
         }
     };
 
@@ -137,13 +138,13 @@ export default function AdminDashboard() {
                             <p className="text-gray-600 mb-4">{event.description}</p>
                             <div className="flex justify-between items-center">
                                 <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${event.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                                    {event.is_active ? 'Active' : 'Inactive'}
+                                    {event.is_active ? t.admin.active : t.admin.inactive}
                                 </span>
                                 <Link
                                     href={`/admin/events/${event.id}`}
                                     className="text-blue-600 hover:underline font-medium"
                                 >
-                                    Manage &rarr;
+                                    {t.admin.manageEvent} &rarr;
                                 </Link>
                             </div>
                         </div>

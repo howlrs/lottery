@@ -5,6 +5,7 @@ import { Trash2, Edit, Plus, Save, X, Scan, CheckCircle, AlertTriangle } from 'l
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useLanguage } from '@/i18n/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { showToast } from '@/components/Toast';
 
 interface Reward {
     id: string;
@@ -101,12 +102,12 @@ export default function AdminEventPage() {
             if (res.ok) {
                 setVerificationResult(data.win_log);
             } else {
-                alert(data.error);
+                showToast(data.error, 'error');
                 setVerificationResult(null);
             }
         } catch (error) {
             console.error('Verification failed', error);
-            alert(t.admin.redemptionError);
+            showToast(t.admin.redemptionError, 'error');
         }
     }, [t.admin.redemptionError]);
 
@@ -122,16 +123,16 @@ export default function AdminEventPage() {
             });
             const data = await res.json();
             if (res.ok) {
-                alert(t.admin.redemptionSuccess);
+                showToast(t.admin.redemptionSuccess, 'success');
                 // Refresh verification result to show updated status
                 verifyToken(tokenInput);
                 fetchWinLogs(); // Refresh the list
             } else {
-                alert(data.error);
+                showToast(data.error, 'error');
             }
         } catch (error) {
             console.error('Redemption failed', error);
-            alert(t.admin.redemptionError);
+            showToast(t.admin.redemptionError, 'error');
         }
     }, [verificationResult, tokenInput, verifyToken, fetchWinLogs, t.admin.redeemConfirm, t.admin.redemptionSuccess, t.admin.redemptionError]);
 
@@ -202,7 +203,7 @@ export default function AdminEventPage() {
             fetchRewards();
         } catch (error) {
             console.error('Failed to save reward', error);
-            alert(t.admin.saveError);
+            showToast(t.admin.saveError, 'error');
         }
     };
 

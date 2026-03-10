@@ -17,6 +17,8 @@ export const translations = {
       tryAgain: "Better luck next time.",
       tokenLabel: "Token",
       claimInstruction: "Show this code to claim your prize",
+      confirmSpin: "Are you sure you want to spin?",
+      allSoldOut: "All prizes have been claimed!",
     },
     admin: {
       title: "Reward Management",
@@ -66,6 +68,17 @@ export const translations = {
       noWinLogs: "No win logs yet.",
       redeem: "Redeem",
       redemptionError: "Redemption failed",
+      active: "Active",
+      inactive: "Inactive",
+      manageEvent: "Manage",
+      ended: "Ended",
+      noDescription: "No description",
+      noEvents: "No active events found.",
+      exportCsv: "Export CSV",
+      statistics: "Statistics",
+      totalSpins: "Total Spins",
+      totalWins: "Total Wins",
+      redemptionRate: "Redemption Rate",
     }
   },
   ja: {
@@ -86,6 +99,8 @@ export const translations = {
       tryAgain: "次は当たるかも？",
       tokenLabel: "トークン",
       claimInstruction: "このコードを提示して景品を受け取ってください",
+      confirmSpin: "回転しますか？",
+      allSoldOut: "全ての景品が終了しました！",
     },
     admin: {
       title: "景品管理",
@@ -135,6 +150,17 @@ export const translations = {
       noWinLogs: "当選履歴がありません。",
       redeem: "引き換える",
       redemptionError: "引換に失敗しました",
+      active: "有効",
+      inactive: "無効",
+      manageEvent: "管理",
+      ended: "終了",
+      noDescription: "説明なし",
+      noEvents: "有効なイベントが見つかりません。",
+      exportCsv: "CSVエクスポート",
+      statistics: "統計",
+      totalSpins: "総回転数",
+      totalWins: "総当選数",
+      redemptionRate: "引換率",
     }
   }
 };

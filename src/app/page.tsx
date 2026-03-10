@@ -51,16 +51,16 @@ export default function Home() {
                         <Link href={`/events/${event.slug}`} key={event.id} className="block group">
                             <div className="bg-white rounded-xl shadow-md p-6 transition transform group-hover:scale-105 group-hover:shadow-xl border border-transparent group-hover:border-blue-500">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-2">{event.title}</h2>
-                                <p className="text-gray-600 mb-4">{event.description || 'No description'}</p>
+                                <p className="text-gray-600 mb-4">{event.description || t.admin.noDescription}</p>
                                 <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${event.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                                    {event.is_active ? 'Active' : 'Ended'}
+                                    {event.is_active ? t.admin.active : t.admin.ended}
                                 </span>
                             </div>
                         </Link>
                     ))}
 
                     {events.length === 0 && (
-                        <p className="text-gray-500 col-span-full text-center">No active events found.</p>
+                        <p className="text-gray-500 col-span-full text-center">{t.admin.noEvents}</p>
                     )}
                 </div>
             )}

@@ -6,6 +6,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useParams } from 'next/navigation';
 import { useLanguage } from '@/i18n/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { showToast } from '@/components/Toast';
 
 interface Reward {
     id: string;
@@ -192,11 +193,11 @@ export default function LotteryPage() {
                 if (eventId) fetchRewards(eventId);
             } else {
                 const err = await res.json();
-                alert(t.lottery.errorClaiming + ': ' + err.error);
+                showToast(t.lottery.errorClaiming + ': ' + err.error, 'error');
             }
         } catch (error) {
             console.error('Failed to claim', error);
-            alert(t.lottery.failedToClaim);
+            showToast(t.lottery.failedToClaim, 'error');
         }
     };
 
@@ -313,8 +314,8 @@ export default function LotteryPage() {
 
             <button
                 onClick={spinning && !isStopping ? stopSpin : startSpin}
-                disabled={isStopping || isWaiting || rewards.length === 0}
-                className={`px-8 py-4 text-2xl font-bold rounded-full shadow-lg transform transition hover:scale-105 ${isStopping || rewards.length === 0 || isWaiting
+                disabled={isStopping || isWaiting || loading || rewards.length === 0}
+                className={`px-8 py-4 text-2xl font-bold rounded-full shadow-lg transform transition hover:scale-105 ${isStopping || rewards.length === 0 || isWaiting || loading
                     ? 'bg-gray-500 cursor-not-allowed text-gray-300'
                     : spinning
                         ? 'bg-red-500 text-white hover:bg-red-600'
@@ -323,6 +324,12 @@ export default function LotteryPage() {
             >
                 {isWaiting ? t.lottery.spinning : isStopping ? t.lottery.stopping : spinning ? t.lottery.stop : t.lottery.spin}
             </button>
+
+            {!loading && rewards.length === 0 && (
+                <div className="mt-6 px-6 py-4 bg-yellow-100 text-yellow-800 rounded-xl text-lg font-bold text-center shadow">
+                    {t.lottery.allSoldOut}
+                </div>
+            )}
 
             {result && (
                 <div className={`mt-8 p-6 bg-white rounded-xl shadow-2xl text-center ${result.is_lose ? '' : 'animate-bounce'}`}>

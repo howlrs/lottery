@@ -34,16 +34,19 @@ model Reward {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   win_logs    WinLog[]
+
+  @@index([event_id])
 }
 
 model WinLog {
   id          String   @id @default(uuid())
   reward_id   String
   reward      Reward   @relation(fields: [reward_id], references: [id], onDelete: Cascade)
-  token       String   @default(uuid())
+  token       String   @unique @default(uuid())
   is_redeemed Boolean  @default(false)
   redeemed_at DateTime?
   won_at      DateTime @default(now())
+
+  @@index([reward_id])
+  @@index([token])
 }
-
-

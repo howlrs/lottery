@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
 
 export async function GET(request: Request) {
+    const authError = requireAdmin(request);
+    if (authError) return authError;
+
     try {
         const { searchParams } = new URL(request.url);
         const event_id = searchParams.get('event_id');

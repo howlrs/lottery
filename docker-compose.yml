@@ -1,0 +1,16 @@
+services:
+  lottery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:./prod.db
+      - ADMIN_SECRET=${ADMIN_SECRET:-}
+    volumes:
+      - lottery-data:/app/prisma
+    restart: unless-stopped
+
+volumes:
+  lottery-data:

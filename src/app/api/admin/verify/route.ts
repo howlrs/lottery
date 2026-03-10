@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
 
 export async function POST(request: Request) {
+    const authError = requireAdmin(request);
+    if (authError) return authError;
+
     try {
         const body = await request.json();
         const { token } = body;
