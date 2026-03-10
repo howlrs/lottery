@@ -1,5 +1,6 @@
 services:
   lottery:
+    image: lottery-lottery
     build:
       context: .
       dockerfile: Dockerfile
