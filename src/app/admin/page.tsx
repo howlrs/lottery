@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Plus, LogOut } from 'lucide-react';
 import { showToast } from '@/components/Toast';
 import { useLanguage } from '@/i18n/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -17,6 +18,7 @@ interface Event {
 }
 
 export default function AdminDashboard() {
+    const router = useRouter();
     const { t } = useLanguage();
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
@@ -71,12 +73,23 @@ export default function AdminDashboard() {
                         <h1 className="text-3xl font-bold text-gray-800">{t.admin.events}</h1>
                         <LanguageSwitcher />
                     </div>
-                    <button
-                        onClick={() => setIsCreating(true)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition"
-                    >
-                        <Plus size={20} /> {t.admin.newEvent}
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setIsCreating(true)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition"
+                        >
+                            <Plus size={20} /> {t.admin.newEvent}
+                        </button>
+                        <button
+                            onClick={async () => {
+                                await fetch('/api/auth/logout', { method: 'POST' });
+                                router.push('/admin/login');
+                            }}
+                            className="bg-gray-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-600 transition"
+                        >
+                            <LogOut size={20} /> {t.admin.logout}
+                        </button>
+                    </div>
                 </div>
 
                 {isCreating && (

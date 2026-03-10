@@ -79,6 +79,7 @@ export const translations = {
       totalSpins: "Total Spins",
       totalWins: "Total Wins",
       redemptionRate: "Redemption Rate",
+      logout: "Logout",
     }
   },
   ja: {
@@ -161,6 +162,7 @@ export const translations = {
       totalSpins: "総回転数",
       totalWins: "総当選数",
       redemptionRate: "引換率",
+      logout: "ログアウト",
     }
   }
 };
