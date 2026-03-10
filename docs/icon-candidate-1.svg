@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Candidate 1: Roulette Wheel -->
+  <circle cx="256" cy="256" r="240" fill="#1e293b" stroke="#f8fafc" stroke-width="16"/>
+  <path d="M256 16 A240 240 0 0 1 496 256 L256 256 Z" fill="#ef4444"/>
+  <path d="M496 256 A240 240 0 0 1 256 496 L256 256 Z" fill="#3b82f6"/>
+  <path d="M256 496 A240 240 0 0 1 16 256 L256 256 Z" fill="#f59e0b"/>
+  <path d="M16 256 A240 240 0 0 1 256 16 L256 256 Z" fill="#10b981"/>
+  <circle cx="256" cy="256" r="50" fill="#f8fafc"/>
+  <circle cx="256" cy="256" r="30" fill="#1e293b"/>
+  <!-- Pointer -->
+  <polygon points="256,0 236,50 276,50" fill="#fbbf24" stroke="#f8fafc" stroke-width="4"/>
+</svg>

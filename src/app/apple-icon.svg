@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <rect width="180" height="180" rx="32" fill="#1e293b"/>
+  <circle cx="90" cy="90" r="72" fill="#1e293b" stroke="#f8fafc" stroke-width="4"/>
+  <path d="M90 18 A72 72 0 0 1 162 90 L90 90 Z" fill="#ef4444"/>
+  <path d="M162 90 A72 72 0 0 1 90 162 L90 90 Z" fill="#3b82f6"/>
+  <path d="M90 162 A72 72 0 0 1 18 90 L90 90 Z" fill="#f59e0b"/>
+  <path d="M18 90 A72 72 0 0 1 90 18 L90 90 Z" fill="#10b981"/>
+  <circle cx="90" cy="90" r="16" fill="#f8fafc"/>
+  <circle cx="90" cy="90" r="10" fill="#1e293b"/>
+  <polygon points="90,6 83,22 97,22" fill="#fbbf24"/>
+</svg>

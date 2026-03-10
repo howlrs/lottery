@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Candidate 4: Gift Box / Prize -->
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg4)"/>
+  <!-- Box body -->
+  <rect x="96" y="240" width="320" height="200" rx="16" fill="#fef2f2" stroke="#fca5a5" stroke-width="6"/>
+  <!-- Box lid -->
+  <rect x="80" y="200" width="352" height="56" rx="12" fill="#fff1f2" stroke="#fca5a5" stroke-width="6"/>
+  <!-- Ribbon vertical -->
+  <rect x="232" y="200" width="48" height="240" fill="#fbbf24"/>
+  <!-- Ribbon horizontal -->
+  <rect x="80" y="212" width="352" height="32" fill="#fbbf24"/>
+  <!-- Bow -->
+  <ellipse cx="220" cy="180" rx="50" ry="35" fill="#fbbf24" stroke="#f59e0b" stroke-width="4" transform="rotate(-20,220,180)"/>
+  <ellipse cx="292" cy="180" rx="50" ry="35" fill="#fbbf24" stroke="#f59e0b" stroke-width="4" transform="rotate(20,292,180)"/>
+  <circle cx="256" cy="195" r="18" fill="#f59e0b"/>
+  <!-- Stars -->
+  <polygon points="130,100 138,125 160,125 142,140 148,165 130,150 112,165 118,140 100,125 122,125" fill="#fef3c7" opacity="0.9"/>
+  <polygon points="400,80 406,98 424,98 410,108 414,126 400,116 386,126 390,108 376,98 394,98" fill="#fef3c7" opacity="0.7"/>
+  <polygon points="380,140 384,152 396,152 386,160 390,172 380,164 370,172 374,160 364,152 376,152" fill="#fef3c7" opacity="0.5"/>
+</svg>

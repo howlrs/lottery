@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Candidate 3: Minimal Wheel with L -->
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg3)"/>
+  <!-- Segmented circle -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#334155" stroke-width="48"/>
+  <path d="M256 66 A190 190 0 0 1 446 256" fill="none" stroke="#ef4444" stroke-width="48" stroke-linecap="butt"/>
+  <path d="M446 256 A190 190 0 0 1 256 446" fill="none" stroke="#3b82f6" stroke-width="48" stroke-linecap="butt"/>
+  <path d="M256 446 A190 190 0 0 1 66 256" fill="none" stroke="#f59e0b" stroke-width="48" stroke-linecap="butt"/>
+  <path d="M66 256 A190 190 0 0 1 256 66" fill="none" stroke="#10b981" stroke-width="48" stroke-linecap="butt"/>
+  <!-- Center L -->
+  <text x="256" y="280" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="160" fill="#f8fafc">L</text>
+</svg>
